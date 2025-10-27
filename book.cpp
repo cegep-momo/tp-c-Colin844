@@ -1,5 +1,6 @@
 // book.cpp 
 #include <iostream>
+#include <sstream>
 #include "book.h"
 
 // Constructeur par défaut
@@ -55,13 +56,40 @@ void Book::setBorrowerName(const string& name) {
 /**
  * TODO: Implémenter les méthodes suivantes
  */
-void Book::checkOut(const string& borrower) {}
+void Book::checkOut(const string& borrower) {
+    if (isAvailable) {
+        isAvailable = false;
+        borrowerName = borrower;
+    } else {
+        cout << "Book is already checked out." << endl;
+    }
+}
 
-void Book::returnBook() {}
+void Book::returnBook() {
+    if (!isAvailable) {
+        isAvailable = true;
+        borrowerName = "";
+    } else {
+        cout << "Book is not checked out." << endl;
+    }
+}
 
-string Book::toString() const {}
+string Book::toString() const {
+    return "Title: " + title + "| Author: " + author + "| ISBN: " + isbn + "| Available: " + (isAvailable ? "Yes" : "No") + (isAvailable ? "" : "| Borrower: " + borrowerName);
+}
 
-string Book::toFileFormat() const {}
+string Book::toFileFormat() const {
+    return title + "|" + author + "|" + isbn + "|" + (isAvailable ? "1" : "0") + "|" + borrowerName;
+}
 
-void Book::fromFileFormat(const string& line) {}
+void Book::fromFileFormat(const string& line) {
+    stringstream ss(line);
+    string token;
 
+    getline(ss, title, '|');
+    getline(ss, author, '|');
+    getline(ss, isbn, '|');
+    getline(ss, token, '|');
+    isAvailable = (token == "1");
+    getline(ss, borrowerName, '|');
+}
