@@ -14,6 +14,9 @@ Logger::Logger(const string& filename) : logFilename(filename) {}
 /**
  * C++ Date and Time
  * https://www.w3schools.com/cpp/cpp_date.asp
+ * 
+ * setw() function in C++ with Examples
+ * https://www.geeksforgeeks.org/cpp/setw-function-in-cpp-with-examples/
  */
 string Logger::getCurrentDateTime() const {
     time_t now = time(0);
