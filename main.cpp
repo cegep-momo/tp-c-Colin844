@@ -32,6 +32,8 @@ void displayMenu() {
     cout << "11. Statistiques de la Bibliothèque\n";
     cout << "12. Sauvegarder les Données\n";
     cout << "13. Créer une Sauvegarde\n";
+    cout << "14. Afficher les Livres Triés par Titre\n";
+    cout << "15. Afficher les Livres Triés par Auteur\n";
     cout << "0.  Quitter\n";
     cout << "======================================================\n";
     cout << "Entrez votre choix : ";
@@ -209,6 +211,18 @@ int main() {
             
             case 13: { // Create Backup
                 fileManager.createBackup();
+                pauseForInput();
+                break;
+            }
+
+            case 14: { // Afficher les livres triés par titre
+                library.displayAllBooksSorted(true);
+                pauseForInput();
+                break;
+            }
+            
+            case 15: { // Afficher les livres triés par auteur
+                library.displayAllBooksSorted(false);
                 pauseForInput();
                 break;
             }

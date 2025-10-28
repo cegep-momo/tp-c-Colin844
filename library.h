@@ -27,6 +27,12 @@ public:
     vector<Book*> searchBooksByAuthor(const string& author);
     vector<Book*> getAvailableBooks();
     vector<Book*> getAllBooks();
+
+    // Méthodes de tri des livres
+    void sortBooksByTitle();
+    void sortBooksByAuthor();
+    vector<Book*> getBooksSortedByTitle();
+    vector<Book*> getBooksSortedByAuthor();
     
     // User management
     void addUser(const User& user);
@@ -41,6 +47,7 @@ public:
     void displayAllBooks();
     void displayAvailableBooks();
     void displayAllUsers();
+    void displayAllBooksSorted(bool byTitle = true); // Affichage trié par titre ou auteur
     
     // Statistics
     int getTotalBooks() const;

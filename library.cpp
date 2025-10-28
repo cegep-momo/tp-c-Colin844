@@ -71,6 +71,61 @@ vector<Book*> Library::searchBooksByAuthor(const string& author) {
     return results;
 }
 
+// Trier les livres par titre
+void Library::sortBooksByTitle() {
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a, const unique_ptr<Book>& b) {
+            return a->getTitle() < b->getTitle();
+        });
+}
+
+// Trier les livres par auteur
+void Library::sortBooksByAuthor() {
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a, const unique_ptr<Book>& b) {
+            return a->getAuthor() < b->getAuthor();
+        });
+}
+
+// Obtenir les livres triés par titre
+vector<Book*> Library::getBooksSortedByTitle() {
+    vector<Book*> sortedBooks = getAllBooks();
+    sort(sortedBooks.begin(), sortedBooks.end(),
+        [](Book* a, Book* b) {
+            return a->getTitle() < b->getTitle();
+        });
+    return sortedBooks;
+}
+
+// Obtenir les livres triés par auteur
+vector<Book*> Library::getBooksSortedByAuthor() {
+    vector<Book*> sortedBooks = getAllBooks();
+    sort(sortedBooks.begin(), sortedBooks.end(),
+        [](Book* a, Book* b) {
+            return a->getAuthor() < b->getAuthor();
+        });
+    return sortedBooks;
+}
+
+// Afficher tous les livres triés
+void Library::displayAllBooksSorted(bool byTitle) {
+    vector<Book*> sortedBooks = byTitle ? getBooksSortedByTitle() : getBooksSortedByAuthor();
+    
+    if (sortedBooks.empty()) {
+        cout << "Aucun livre dans la bibliothèque.\n";
+        return;
+    }
+    
+    cout << "\n=== LIVRES TRIES PAR " << (byTitle ? "TITRE" : "AUTEUR") << " ===\n";
+    for (size_t i = 0; i < sortedBooks.size(); ++i) {
+        cout << "\nLivre " << (i + 1) << " :\n";
+        cout << sortedBooks[i]->toString() << "\n";
+        cout << "-------------------------\n";
+    }
+
+    cout << "\nTotal des livres: " << sortedBooks.size() << "\n";
+}
+
 // Get all available books
 vector<Book*> Library::getAvailableBooks() {
     vector<Book*> available;
