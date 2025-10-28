@@ -1,5 +1,6 @@
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 
 #include "user.h"
 
@@ -11,6 +12,14 @@ User::User() : name(""), userId("") {}
 // Parameterized constructor
 User::User(const string& name, const string& userId) 
     : name(name), userId(userId) {}
+
+// Constructeur avec génération d'ID
+User::User(const string& name) : name(name) {
+    // Génère un ID du type USR### (ex : USR001)
+    stringstream ss;
+    ss << setw(3) << setfill('0') << nextId++;
+    userId = string("USR") + ss.str();
+}
 
 // Getters
 string User::getName() const { return name; }
@@ -90,4 +99,17 @@ void User::fromFileFormat(const string& line) {
             borrowedBooks.push_back(isbn);
         }
     }
+
+    // Mise à jour nextId pour éviter les doublons d'ID lors du chargement
+    if (userId.rfind("USR", 0) == 0) {
+        string num = userId.substr(3);
+            int val = stoi(num);
+            if (val >= nextId) nextId = val + 1;
+    }
 }
+
+// Définition variable statique et méthodes d'accès
+int User::nextId = 1;
+
+int User::getNextId() { return nextId; }
+void User::setNextId(int id) { nextId = id; }

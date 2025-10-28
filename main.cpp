@@ -34,6 +34,7 @@ void displayMenu() {
     cout << "13. Créer une Sauvegarde\n";
     cout << "14. Afficher les Livres Triés par Titre\n";
     cout << "15. Afficher les Livres Triés par Auteur\n";
+    cout << "16. Ajouter un utilisateur avec ID automatique\n";
     cout << "0.  Quitter\n";
     cout << "======================================================\n";
     cout << "Entrez votre choix : ";
@@ -226,7 +227,19 @@ int main() {
                 pauseForInput();
                 break;
             }
-            
+
+            case 16: { // Ajouter un utilisateur avec ID automatique
+                string name = getInput("Entrez le nom de l'utilisateur : ");
+                
+                User newUser(name);
+                
+                library.addUser(newUser);
+                cout << "Utilisateur ajouté avec succès !\n";
+                cout << "ID Utilisateur : " << newUser.getUserId() << "\n";
+                pauseForInput();
+                break;
+            }
+
             case 0: // Exit
                 cout << "Sauvegarde des données avant la fermeture...\n";
                 fileManager.saveLibraryData(library);
