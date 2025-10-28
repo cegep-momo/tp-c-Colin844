@@ -4,6 +4,7 @@
 
 #include "library.h"
 #include "filemanager.h"
+#include "logger.h"
 
 using namespace std;
 
@@ -35,6 +36,7 @@ void displayMenu() {
     cout << "14. Afficher les Livres Triés par Titre\n";
     cout << "15. Afficher les Livres Triés par Auteur\n";
     cout << "16. Ajouter un utilisateur avec ID automatique\n";
+    cout << "17. Afficher les Logs d'activité\n";
     cout << "0.  Quitter\n";
     cout << "======================================================\n";
     cout << "Entrez votre choix : ";
@@ -50,6 +52,7 @@ string getInput(const string& prompt) {
 int main() {
     Library library;
     FileManager fileManager;
+    Logger logger("library_activity.log");
     
     // Load existing data
     cout << "Chargement des données de la bibliothèque...\n";
@@ -168,8 +171,12 @@ int main() {
             case 9: { // Check Out Book
                 string isbn = getInput("Entrez l'ISBN du livre à emprunter : ");
                 string userId = getInput("Entrez l'ID de l'utilisateur : ");
+
+                Book* book = library.findBookByISBN(isbn);
+                User* user = library.findUserById(userId);
                 
                 if (library.checkOutBook(isbn, userId)) {
+                    logger.logCheckOut(isbn, book->getTitle(), user->getName());
                     cout << "Livre emprunté avec succès !\n";
                 } else {
                     cout << "Erreur : Impossible d'emprunter le livre. Vérifiez l'ISBN, l'ID utilisateur et la disponibilité du livre.\n";
@@ -180,9 +187,20 @@ int main() {
             
             case 10: { // Return Book
                 string isbn = getInput("Entrez l'ISBN du livre à retourner : ");
+                Book* book = library.findBookByISBN(isbn);
                 
-                if (library.returnBook(isbn)) {
-                    cout << "Livre retourné avec succès !\n";
+                if (book && !book->getAvailability()) {
+                    string borrower = book->getBorrowerName();
+                    string title = book->getTitle();
+                    
+                    if (library.returnBook(isbn)) {
+                        logger.logReturn(isbn, title, borrower);
+                        cout << "Livre retourne avec succes !\n";
+                    } else {
+                        cout << "Erreur : Impossible de retourner le livre.\n";
+                    }
+                } else if (book) {
+                    cout << "Erreur : Ce livre n'est pas emprunté.\n";
                 } else {
                     cout << "Erreur : Impossible de retourner le livre. Vérifiez l'ISBN et que le livre est bien emprunté.\n";
                 }
@@ -236,6 +254,12 @@ int main() {
                 library.addUser(newUser);
                 cout << "Utilisateur ajouté avec succès !\n";
                 cout << "ID Utilisateur : " << newUser.getUserId() << "\n";
+                pauseForInput();
+                break;
+            }
+
+            case 17: { // Afficher les logs d'activité
+                logger.displayRecentLogs();
                 pauseForInput();
                 break;
             }
